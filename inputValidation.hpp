@@ -6,6 +6,8 @@
 #include <iostream>
 #include <exception>
 
+void clearConsole();
+void pressEnter();
 int readInteger();
 std::string readString();
 void validPlateFormat(std::string plate);	

@@ -1,5 +1,16 @@
 #include "inputValidation.hpp"
 
+void clearConsole() {
+	std::cout << "\033[2J\033[H";
+}
+
+void pressEnter() {
+	std::cout << "\n\nPress enter to continue.";
+	std::cin.get();
+	clearConsole();
+}
+
+
 int readInteger() {
 	int value{};
 

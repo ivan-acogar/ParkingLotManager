@@ -1,7 +1,7 @@
 #include "parkingLot.hpp"
 
 void ParkingLot::enterVehicle() {
-	std::cout << "\nEnter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
+	std::cout << "Enter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
 
 	std::string plateNumber{};
 	std::string ownerName{};
@@ -22,13 +22,17 @@ void ParkingLot::enterVehicle() {
 
 		vehicles.push_back(Vehicle(plateNumber, ownerName, entryHour));
 
-		std::cout << "\nVehicle registered:\n";
+		clearConsole();
+		std::cout << "Vehicle registered:\n";
 		std::cout << "Plate Number: " << plateNumber << " || ";
 		std::cout << "Owner's Name: " << ownerName << " || ";
-		std::cout << "Entry Hour: " << entryHour << "\n\n";
+		std::cout << "Entry Hour: " << entryHour;
+
+		pressEnter();
 	}
 		catch (std::exception& e) {
-			std::cout << "\nError: " << e.what();
+			clearConsole();
+			std::cout << "Error: " << e.what();
 		}
 }
 
@@ -51,6 +55,7 @@ void ParkingLot::hourValidation(int entryHour) {
 
 void ParkingLot::capacityCheck() {
 	if (vehicles.size() >= 3) {
+		clearConsole();
 		std::cout << "The parking lot is full.\n\n";
 	}
 	else {
@@ -64,7 +69,7 @@ void ParkingLot::searchVehicle() {
 			throw std::runtime_error("The parking lot is empty.\n\n");
 		}
 
-		std::cout << "\nSearch a vehicle.\n";
+		std::cout << "Search a vehicle.\n";
 
 		std::cout << "Enter plate number (format: ABC-123-A): ";
 
@@ -76,14 +81,17 @@ void ParkingLot::searchVehicle() {
 
 		for (size_t i = 0; i < vehicles.size(); ++i) {
 			if (plateNumber == vehicles[i].getPlateNumber()) {
-				std::cout << "\nVehicle found.\n\n";
+				clearConsole();
+				std::cout << "Vehicle found.\n\n";
 				vehicles[i].printData();
+				pressEnter();
 			}
 		}
 		std::cout << "\n";
 	}
 	catch (std::exception& e) {
-		std::cout << "\nError: " << e.what();
+		clearConsole();
+		std::cout << "Error: " << e.what();
 	}
 }
 
@@ -98,7 +106,12 @@ std::string ParkingLot::plateNumberValidation() {
 
 void ParkingLot::removeVehicle() {
 	try {
-		std::cout << "\n--- Remove vehicle menu ---\n";
+
+		if (vehicles.size() == 0) {
+			throw std::runtime_error("The parking lot is empty.\n\n");
+		}
+
+		std::cout << "--- Remove vehicle menu ---\n";
 		std::cout << "1) Search by plate number.\n";
 		std::cout << "2) Remove by showing the existing vehicles list.\n\n";
 
@@ -107,11 +120,8 @@ void ParkingLot::removeVehicle() {
 
 		switch(menuOption){
 			case 1: {
-				if (vehicles.size() == 0) {
-				throw std::runtime_error("The parking lot is empty.\n\n");
-				}
-
-				std::cout << "\nSearch a vehicle.\n";
+				clearConsole();
+				std::cout << "Search a vehicle.\n";
 
 				std::cout << "Enter plate number (format: ABC-123-A): ";
 
@@ -123,7 +133,8 @@ void ParkingLot::removeVehicle() {
 
 				for (size_t i = 0; i < vehicles.size(); ++i) {
 					if (plateNumber == vehicles[i].getPlateNumber()) {
-						std::cout << "\nVehicle found.\n";
+						clearConsole();
+						std::cout << "Vehicle found.\n";
 						std::cout << "Enter exit hour: ";
 						int exitHour = readInteger();
 						hourValidation(exitHour);
@@ -144,7 +155,7 @@ void ParkingLot::removeVehicle() {
 							std::cout << "Charge: " << charge << " (Vehicle stayed for " << totalHours <<  " hours).\n\n";
 						}
 						vehicles.erase(vehicles.begin() + i);
-						std::cout << "Returning to main menu...\n\n";
+						pressEnter();
 					}
 				}
 				
@@ -153,6 +164,7 @@ void ParkingLot::removeVehicle() {
 			}
 
 			case 2: {
+				clearConsole();
 				parkedVehicles();
 
 				std::cout << "Enter the vehicle number to remove: ";
@@ -161,7 +173,8 @@ void ParkingLot::removeVehicle() {
 					throw std::runtime_error("Input is out of range.\n\n");
 				}
 				else {
-					std::cout << "\nVehicle found.\n";
+					clearConsole();
+					std::cout << "Vehicle found.\n";
 					std::cout << "Enter exit hour: ";
 					int exitHour = readInteger();
 					hourValidation(exitHour);
@@ -183,7 +196,7 @@ void ParkingLot::removeVehicle() {
 					}
 					size_t index = menuOption - 1;
 					vehicles.erase(vehicles.begin() + index);
-					std::cout << "Returning to main menu...\n\n";
+					pressEnter();
 				}
 				break;
 			}
@@ -193,20 +206,22 @@ void ParkingLot::removeVehicle() {
 	}
 
 	catch (std::exception& e) {
+		clearConsole();
 		std::cout << "Error: " << e.what();
 	}
 }
 
 void ParkingLot::parkedVehicles() {
 	if (vehicles.size() == 0) {
-		std::cout << "\nThe parking lot is empty.\n\n";
+		clearConsole();
+		std::cout << "The parking lot is empty.\n\n";
 	}
 	else {
-		std::cout << "\n";
+		clearConsole();
 		for (size_t i = 0; i < vehicles.size(); ++i) {
 			std::cout << i+1<< ") ";
 			vehicles[i].printData();
 		}
-		std::cout << "\n";
+		pressEnter();
 	}
 }

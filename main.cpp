@@ -28,28 +28,34 @@ int main()
                 menuInputValidation(menuOption);
            }
            catch (std::exception& e) {
-                std::cout << "\nError: " << e.what();
+               clearConsole();
+               std::cout << "Error: " << e.what();
            }
 
         switch (menuOption) {
         case 1:
+            clearConsole();
             parkingLot.capacityCheck();
             break;
 
 
         case 2:
+            clearConsole();
             parkingLot.removeVehicle();
             break;
 
         case 3:
+            clearConsole();
             parkingLot.searchVehicle();
             break;
 
         case 4:
+            clearConsole();
             parkingLot.parkedVehicles();
             break;
             
-        case 5: 
+        case 5:
+            clearConsole();
             loop = false;
             std::cout << "\n";
             break;
