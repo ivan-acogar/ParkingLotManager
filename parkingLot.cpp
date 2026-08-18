@@ -1,5 +1,9 @@
 #include "parkingLot.hpp"
 
+ParkingLot::ParkingLot(Database& database)
+	: database(database) {
+}
+
 void ParkingLot::enterVehicle() {
 	std::cout << "Enter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
 
@@ -27,6 +31,12 @@ void ParkingLot::enterVehicle() {
 		std::cout << "Plate Number: " << plateNumber << " || ";
 		std::cout << "Owner's Name: " << ownerName << " || ";
 		std::cout << "Entry Hour: " << entryHour;
+
+		database.insertVehicle(
+			plateNumber,
+			ownerName,
+			entryHour
+		);
 
 		pressEnter();
 	}

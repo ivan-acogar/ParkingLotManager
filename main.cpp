@@ -1,4 +1,6 @@
 #include "parkingLot.hpp"
+#include <pqxx/pqxx>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
@@ -10,9 +12,22 @@ static void menuInputValidation(int menuOption) {
 
 int main()
 {
-    ParkingLot parkingLot;
-    bool loop{ true };
+    char* dbUrl = nullptr;
+    size_t length = 0;
 
+    _dupenv_s(&dbUrl, &length, "NEON_DB_URL");
+
+    if (dbUrl == nullptr) {
+        throw std::runtime_error("NEON_DB_URL environment variable not found.");
+    }
+
+    Database database(dbUrl);
+
+    free(dbUrl);
+
+    ParkingLot parkingLot(database);
+
+    bool loop{ true };
     while (loop == true) {
         std::cout << "--- Parking Lot Menu ---\n";
         std::cout << "1) Enter vehicle.\n";

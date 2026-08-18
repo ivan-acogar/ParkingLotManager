@@ -140,12 +140,14 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="database.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="inputValidation.cpp" />
     <ClCompile Include="parkingLot.cpp" />
     <ClCompile Include="vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="database.hpp" />
     <ClInclude Include="inputValidation.hpp" />
     <ClInclude Include="parkingLot.hpp" />
     <ClInclude Include="vehicle.hpp" />

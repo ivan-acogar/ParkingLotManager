@@ -1,5 +1,6 @@
 #ifndef PARKINGLOT_HPP
 #define PARKINGLOT_HPP
+#include "database.hpp"
 #include "vehicle.hpp"
 #include "inputValidation.hpp"
 #include <iostream>
@@ -9,8 +10,10 @@
 class ParkingLot {
 private:
 	std::vector <Vehicle> vehicles;
+	Database& database;
 	int capacity;
 public:
+	ParkingLot(Database& database);
 	void enterVehicle();
 	std::string plateNumberValidation();
 	bool plateNumberAlreadyExists(std::string plateNumber);
