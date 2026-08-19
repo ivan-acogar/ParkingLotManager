@@ -222,16 +222,20 @@ void ParkingLot::removeVehicle() {
 }
 
 void ParkingLot::parkedVehicles() {
-	if (vehicles.size() == 0) {
+	std::vector<Vehicle> vehiclesFromDatabase = database.getVehicles();
+
+	if (vehiclesFromDatabase.size() == 0) {
 		clearConsole();
 		std::cout << "The parking lot is empty.\n\n";
 	}
 	else {
 		clearConsole();
-		for (size_t i = 0; i < vehicles.size(); ++i) {
-			std::cout << i+1<< ") ";
-			vehicles[i].printData();
+
+		for (size_t i = 0; i < vehiclesFromDatabase.size(); ++i) {
+			std::cout << i + 1 << ") ";
+			vehiclesFromDatabase[i].printData();
 		}
+
 		pressEnter();
 	}
 }
