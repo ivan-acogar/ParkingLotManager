@@ -14,6 +14,7 @@ private:
 	int capacity;
 public:
 	ParkingLot(Database& database);
+	void loadDatabaseData();
 	void enterVehicle();
 	std::string plateNumberValidation();
 	bool plateNumberAlreadyExists(std::string plateNumber);

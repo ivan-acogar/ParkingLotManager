@@ -1,4 +1,5 @@
 #include "parkingLot.hpp"
+#include "database.hpp"
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
@@ -26,6 +27,12 @@ int main()
     free(dbUrl);
 
     ParkingLot parkingLot(database);
+
+    parkingLot.loadDatabaseData();
+
+
+
+    std::cout << "Current time: ";
 
     bool loop{ true };
     while (loop == true) {
@@ -67,6 +74,7 @@ int main()
         case 4:
             clearConsole();
             parkingLot.parkedVehicles();
+            pressEnter();
             break;
             
         case 5:

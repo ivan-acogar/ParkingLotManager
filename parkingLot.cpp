@@ -4,6 +4,10 @@ ParkingLot::ParkingLot(Database& database)
 	: database(database) {
 }
 
+void ParkingLot::loadDatabaseData() {
+	vehicles = database.getVehicles();
+}
+
 void ParkingLot::enterVehicle() {
 	std::cout << "Enter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
 
@@ -164,6 +168,8 @@ void ParkingLot::removeVehicle() {
 							int charge = totalHours * 25;
 							std::cout << "Charge: " << charge << " (Vehicle stayed for " << totalHours <<  " hours).\n\n";
 						}
+
+						database.eraseVehicle(plateNumber);
 						vehicles.erase(vehicles.begin() + i);
 						pressEnter();
 					}
@@ -176,6 +182,8 @@ void ParkingLot::removeVehicle() {
 			case 2: {
 				clearConsole();
 				parkedVehicles();
+
+				std::string plateNumber{};
 
 				std::cout << "Enter the vehicle number to remove: ";
 				int menuOption = readInteger();
@@ -204,7 +212,10 @@ void ParkingLot::removeVehicle() {
 						int charge = totalHours * 25;
 						std::cout << "Charge: " << charge << " (Vehicle stayed for " << totalHours << " hours).\n\n";
 					}
+
 					size_t index = menuOption - 1;
+					plateNumber = vehicles[index].getPlateNumber();
+					database.eraseVehicle(plateNumber);
 					vehicles.erase(vehicles.begin() + index);
 					pressEnter();
 				}
@@ -235,7 +246,5 @@ void ParkingLot::parkedVehicles() {
 			std::cout << i + 1 << ") ";
 			vehiclesFromDatabase[i].printData();
 		}
-
-		pressEnter();
 	}
 }

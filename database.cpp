@@ -31,15 +31,15 @@ void Database::insertVehicle(const std::string& plateNumber, const std::string& 
     pqxx::work transaction(connection);
 
     transaction.exec(
-        "INSERT INTO vehicles "
-        "(plate_number, owner_name, entry_hour) "
-        "VALUES ($1, $2, $3)",
-        pqxx::params{
-            plateNumber,
-            ownerName,
-            entryHour
-        }
-    );
+        "INSERT INTO vehicles (plate_number, owner_name, entry_hour) VALUES ($1, $2, $3)", pqxx::params{plateNumber, ownerName, entryHour});
+
+    transaction.commit();
+}
+
+void Database::eraseVehicle(const std::string plateNumber) {
+    pqxx::work transaction(connection);
+
+    transaction.exec("DELETE FROM vehicles WHERE plate_number = $1", pqxx::params{ plateNumber });
 
     transaction.commit();
 }
