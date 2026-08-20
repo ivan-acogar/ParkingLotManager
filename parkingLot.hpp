@@ -18,7 +18,6 @@ public:
 	void enterVehicle();
 	std::string plateNumberValidation();
 	bool plateNumberAlreadyExists(std::string plateNumber);
-	void hourValidation(int entryHour);
 	void capacityCheck();
 	void removeVehicle();
 	void searchVehicle();

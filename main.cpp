@@ -30,10 +30,6 @@ int main()
 
     parkingLot.loadDatabaseData();
 
-
-
-    std::cout << "Current time: ";
-
     bool loop{ true };
     while (loop == true) {
         std::cout << "--- Parking Lot Menu ---\n";

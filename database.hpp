@@ -15,9 +15,13 @@ public:
 
     Database(const std::string& connectionString);
 
-    void insertVehicle(const std::string& plateNumber,const std::string& ownerName,int entryHour);
+    std::string insertVehicleAndReturnTime(const std::string& plateNumber);
 
-    void eraseVehicle(const std::string plateNumber);
+    std::string eraseVehicleAndReturnTime(const std::string plateNumber, double amount);
+
+    double calculateTimeDifference(const std::string plateNumber);
+
+    
 };
 
 #endif

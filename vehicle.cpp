@@ -1,7 +1,7 @@
 #include "vehicle.hpp"
 
-Vehicle::Vehicle(std::string plateNumber, std::string ownerName, int entryHour)
-	: plateNumber(plateNumber), ownerName(ownerName), entryHour(entryHour) {
+Vehicle::Vehicle(std::string plateNumber, std::string entryTime)
+	: plateNumber(plateNumber), entryTime(entryTime) {
 }
 
 std::string Vehicle::getPlateNumber() const{
@@ -10,10 +10,5 @@ std::string Vehicle::getPlateNumber() const{
 
 void Vehicle::printData() const {
 	std::cout << "Plate Number: " << plateNumber << " || ";
-	std::cout << "Owner's name: " << ownerName << " || ";
-	std::cout << "Entry hour: " << entryHour << "\n";
-}
-
-int Vehicle::getHour() const {
-	return entryHour;
+	std::cout << "Entry Time: " << entryTime << "\n";
 }

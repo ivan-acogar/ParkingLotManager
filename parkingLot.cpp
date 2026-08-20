@@ -12,8 +12,7 @@ void ParkingLot::enterVehicle() {
 	std::cout << "Enter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
 
 	std::string plateNumber{};
-	std::string ownerName{};
-	int entryHour{};
+	std::string entryTime{};
 	try {
 		std::cout << "Enter plate number (format: ABC-123-A): ";
 		plateNumber = plateNumberValidation();
@@ -21,27 +20,15 @@ void ParkingLot::enterVehicle() {
 			throw std::runtime_error("This plate number already exists.\n\n");
 		}
 
-		std::cout << "Owner's name: ";
-		ownerName = readString(); //basic input validation.
-
-		std::cout << "Entry hour: "; //checks for the entry hour to be inside the range.
-		entryHour = readInteger();
-		hourValidation(entryHour);
-
-		vehicles.push_back(Vehicle(plateNumber, ownerName, entryHour));
+		entryTime = database.insertVehicleAndReturnTime(plateNumber);
 
 		clearConsole();
 		std::cout << "Vehicle registered:\n";
 		std::cout << "Plate Number: " << plateNumber << " || ";
-		std::cout << "Owner's Name: " << ownerName << " || ";
-		std::cout << "Entry Hour: " << entryHour;
+		std::cout << "Entry Time: " << entryTime << "\n";
 
-		database.insertVehicle(
-			plateNumber,
-			ownerName,
-			entryHour
-		);
-
+		vehicles.push_back(Vehicle(plateNumber, entryTime));
+		
 		pressEnter();
 	}
 		catch (std::exception& e) {
@@ -58,12 +45,6 @@ bool ParkingLot::plateNumberAlreadyExists(std::string plateNumber) {
 		else {
 			return false;
 		}
-	}
-}
-
-void ParkingLot::hourValidation(int entryHour) {
-	if (entryHour < 0 || entryHour >= 24) {
-		throw std::runtime_error("The value must be between 0 and 23.\n\n");
 	}
 }
 
@@ -132,6 +113,10 @@ void ParkingLot::removeVehicle() {
 		std::cout << "Enter option: ";
 		int menuOption = readInteger();
 
+		double payment_amount{};
+		double hours{};
+		double cost_per_hour{25};
+
 		switch(menuOption){
 			case 1: {
 				clearConsole();
@@ -149,28 +134,20 @@ void ParkingLot::removeVehicle() {
 					if (plateNumber == vehicles[i].getPlateNumber()) {
 						clearConsole();
 						std::cout << "Vehicle found.\n";
-						std::cout << "Enter exit hour: ";
-						int exitHour = readInteger();
-						hourValidation(exitHour);
-						int entryHour = vehicles[i].getHour();
-						std::cout << "\nEntry hour: " << entryHour << "\n";
-						int totalHours{};
-						if (exitHour == entryHour) {
-							std::cout << "Charge: $25 (minimun charge).";
-						}
-						else {
-							if (exitHour > entryHour) {
-								totalHours = exitHour - entryHour;
-							}
-							else {
-								totalHours = (24 - entryHour) + exitHour;
-							}
-							int charge = totalHours * 25;
-							std::cout << "Charge: " << charge << " (Vehicle stayed for " << totalHours <<  " hours).\n\n";
-						}
 
-						database.eraseVehicle(plateNumber);
+						hours = database.calculateTimeDifference(plateNumber);
+						payment_amount = hours * cost_per_hour;
+
+						std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
+
+						std::cout << "Plate Number: " << plateNumber << " || ";
+						std::cout << "Exit Time: " << exitTime << "\n\n";
+
+						std::cout << "This vehicle stayed for " << hours << "hours.\n";
+						std::cout << "Charge $" << payment_amount << ".\n\n";
+
 						vehicles.erase(vehicles.begin() + i);
+
 						pressEnter();
 					}
 				}
@@ -192,31 +169,26 @@ void ParkingLot::removeVehicle() {
 				}
 				else {
 					clearConsole();
-					std::cout << "Vehicle found.\n";
-					std::cout << "Enter exit hour: ";
-					int exitHour = readInteger();
-					hourValidation(exitHour);
-					int entryHour = vehicles[menuOption-1].getHour();
-					std::cout << "\nEntry hour: " << entryHour << "\n";
-					int totalHours{};
-					if (exitHour == entryHour) {
-						std::cout << "Charge: $25 (minimun charge).";
-					}
-					else {
-						if (exitHour > entryHour) {
-							totalHours = exitHour - entryHour;
-						}
-						else {
-							totalHours = (24 - entryHour) + exitHour;
-						}
-						int charge = totalHours * 25;
-						std::cout << "Charge: " << charge << " (Vehicle stayed for " << totalHours << " hours).\n\n";
-					}
+
+					std::cout << "Vehicle found.\n\n";
 
 					size_t index = menuOption - 1;
+
 					plateNumber = vehicles[index].getPlateNumber();
-					database.eraseVehicle(plateNumber);
+
+					hours = database.calculateTimeDifference(plateNumber);
+					payment_amount = hours * cost_per_hour;
+
+					std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
+
+					std::cout << "Plate Number: " << plateNumber << " || ";
+					std::cout << "Exit Time: " << exitTime << "\n\n";
+
+					std::cout << "This vehicle stayed for " << hours << "hours.\n";
+					std::cout << "Charge $" << payment_amount << ".\n\n";
+
 					vehicles.erase(vehicles.begin() + index);
+
 					pressEnter();
 				}
 				break;
