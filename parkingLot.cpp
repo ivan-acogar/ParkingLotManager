@@ -114,7 +114,7 @@ void ParkingLot::removeVehicle() {
 		int menuOption = readInteger();
 
 		double payment_amount{};
-		double hours{};
+		int hours{};
 		double cost_per_hour{25};
 
 		switch(menuOption){
@@ -137,13 +137,16 @@ void ParkingLot::removeVehicle() {
 
 						hours = database.calculateTimeDifference(plateNumber);
 						payment_amount = hours * cost_per_hour;
+						if (payment_amount == 0) {
+							payment_amount = cost_per_hour;
+						}
 
 						std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
 
 						std::cout << "Plate Number: " << plateNumber << " || ";
 						std::cout << "Exit Time: " << exitTime << "\n\n";
 
-						std::cout << "This vehicle stayed for " << hours << "hours.\n";
+						std::cout << "This vehicle stayed for " << hours << " hours.\n";
 						std::cout << "Charge $" << payment_amount << ".\n\n";
 
 						vehicles.erase(vehicles.begin() + i);
@@ -178,13 +181,16 @@ void ParkingLot::removeVehicle() {
 
 					hours = database.calculateTimeDifference(plateNumber);
 					payment_amount = hours * cost_per_hour;
+					if (payment_amount == 0) {
+						payment_amount = cost_per_hour;
+					}
 
 					std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
 
 					std::cout << "Plate Number: " << plateNumber << " || ";
 					std::cout << "Exit Time: " << exitTime << "\n\n";
 
-					std::cout << "This vehicle stayed for " << hours << "hours.\n";
+					std::cout << "This vehicle stayed for " << hours << " hours.\n";
 					std::cout << "Charge $" << payment_amount << ".\n\n";
 
 					vehicles.erase(vehicles.begin() + index);
