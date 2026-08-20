@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 #include "vehicle.hpp"
+#include "payment.hpp"
 #include <pqxx/pqxx>
 #include <string>
 
@@ -13,6 +14,8 @@ private:
 public:
     std::vector<Vehicle> getVehicles();
 
+    void printPayments();
+
     Database(const std::string& connectionString);
 
     std::string insertVehicleAndReturnTime(const std::string& plateNumber);
@@ -21,7 +24,8 @@ public:
 
     double calculateTimeDifference(const std::string plateNumber);
 
-    
+    std::string updatePaymentsVector(const std::string plateNumber);
+
 };
 
 #endif

@@ -7,9 +7,7 @@ Database::Database(const std::string& connectionString)
 std::vector<Vehicle> Database::getVehicles() {
     pqxx::work transaction(connection);
 
-    pqxx::result result = transaction.exec(
-        "SELECT plate_number, entry_time FROM vehicles"
-    );
+    pqxx::result result = transaction.exec("SELECT plate_number, entry_time FROM vehicles");
 
     std::vector<Vehicle> vehicles;
 
@@ -20,6 +18,18 @@ std::vector<Vehicle> Database::getVehicles() {
     transaction.commit();
 
     return vehicles;
+}
+
+void Database::printPayments() {
+    pqxx::work transaction(connection);
+
+    pqxx::result result = transaction.exec("SELECT id, plate_number, amount, exit_time FROM payments");
+
+    for (const auto& row : result) {
+        std::cout << "ID: " << row["id"].as<int>() << " || Plate Number: " << row["plate_number"].as<std::string>() << " || Amount: " << row["amount"].as<double>() << " || Exit Time: " << row["exit_time"].as<std::string>() << "\n";
+    }
+
+    transaction.commit();
 }
 
 std::string Database::insertVehicleAndReturnTime(const std::string& plateNumber) {
@@ -63,3 +73,6 @@ double Database::calculateTimeDifference(std::string plateNumber) {
     return hours;
 }
 
+std::string updatePaymentVector(const std::string ) {
+
+}

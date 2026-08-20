@@ -2,6 +2,7 @@
 #define PARKINGLOT_HPP
 #include "database.hpp"
 #include "vehicle.hpp"
+#include "payment.hpp"
 #include "inputValidation.hpp"
 #include <iostream>
 #include <vector>

@@ -1,7 +1,7 @@
 #include "parkingLot.hpp"
 
 ParkingLot::ParkingLot(Database& database)
-	: database(database) {
+	: database(database), capacity{10} {
 }
 
 void ParkingLot::loadDatabaseData() {
@@ -9,7 +9,7 @@ void ParkingLot::loadDatabaseData() {
 }
 
 void ParkingLot::enterVehicle() {
-	std::cout << "Enter vehicle (Remaining capacity: " << 3 - vehicles.size() << ").\n\n";
+	std::cout << "Enter vehicle (Remaining capacity: " << capacity - vehicles.size() << ").\n\n";
 
 	std::string plateNumber{};
 	std::string entryTime{};
@@ -49,7 +49,7 @@ bool ParkingLot::plateNumberAlreadyExists(std::string plateNumber) {
 }
 
 void ParkingLot::capacityCheck() {
-	if (vehicles.size() >= 3) {
+	if (vehicles.size() >= capacity) {
 		clearConsole();
 		std::cout << "The parking lot is full.\n\n";
 	}
