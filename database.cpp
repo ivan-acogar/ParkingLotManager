@@ -21,6 +21,12 @@ std::vector<Vehicle> Database::getVehicles() {
 }
 
 void Database::printPayments() {
+
+    bool empty = paymentsEmpty();
+    if (empty == true) {
+        throw std::runtime_error("The payments list is empty.\n\n");
+    }
+
     pqxx::work transaction(connection);
 
     pqxx::result result = transaction.exec("SELECT id, plate_number, amount, exit_time FROM payments");
@@ -30,6 +36,23 @@ void Database::printPayments() {
     }
 
     transaction.commit();
+}
+
+void Database::clearPaymentsHistory() {
+
+    bool empty = paymentsEmpty();
+    if (empty == true) {
+        throw std::runtime_error("The payments list is empty.\n\n");
+    }
+
+    pqxx::work transaction(connection);
+
+    transaction.exec("TRUNCATE TABLE payments RESTART IDENTITY;");
+
+    std::cout << "All payments data was successfully deleted.\n";
+
+    transaction.commit();
+
 }
 
 std::string Database::insertVehicleAndReturnTime(const std::string& plateNumber) {
@@ -73,6 +96,16 @@ double Database::calculateTimeDifference(std::string plateNumber) {
     return hours;
 }
 
-std::string updatePaymentVector(const std::string ) {
+bool Database::paymentsEmpty() {
+    pqxx::work transaction(connection);
 
+    pqxx::result result = transaction.exec(
+        "SELECT EXISTS (SELECT 1 FROM payments);"
+    );
+
+    bool hasPayments = result[0][0].as<bool>();
+
+    transaction.commit();
+
+    return !hasPayments;
 }

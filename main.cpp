@@ -5,12 +5,6 @@
 #include <iostream>
 #include <string>
 
-static void menuInputValidation(int menuOption) {
-    if (menuOption < 1 || menuOption > 5) {
-        throw std::runtime_error("Value is out of range.\n\n");
-    }
-}
-
 int main()
 {
     char* dbUrl = nullptr;
@@ -33,51 +27,68 @@ int main()
     bool loop{ true };
     while (loop == true) {
         std::cout << "--- Parking Lot Menu ---\n";
+        std::cout << "0) Exit program.\n";
         std::cout << "1) Enter vehicle.\n";
         std::cout << "2) Exit vehicle.\n";
         std::cout << "3) Search vehicle.\n";
-        std::cout << "4) Parked vehicles.\n";
-        std::cout << "5) Exit program.\n\n";
+        std::cout << "4) Show Parked vehicles.\n";
+        std::cout << "5) Show Payments History.\n";
+        std::cout << "6) Clear Payments History.\n\n";
 
         int menuOption{};
-           try {
-                std::cout << "Enter an option: ";
-                menuOption = readInteger();
-                menuInputValidation(menuOption);
-           }
-           catch (std::exception& e) {
-               clearConsole();
-               std::cout << "Error: " << e.what();
-           }
+        try {
+            std::cout << "Enter an option: ";
+            menuOption = readInteger();
 
-        switch (menuOption) {
-        case 1:
-            clearConsole();
-            parkingLot.capacityCheck();
-            break;
+            switch (menuOption) {
 
+            case 0:
+                clearConsole();
+                loop = false;
+                std::cout << "Program terminated. \n";
+                break;
 
-        case 2:
-            clearConsole();
-            parkingLot.removeVehicle();
-            break;
+            case 1:
+                clearConsole();
+                parkingLot.capacityCheck();
+                break;
 
-        case 3:
-            clearConsole();
-            parkingLot.searchVehicle();
-            break;
+            case 2:
+                clearConsole();
+                parkingLot.removeVehicle();
+                break;
 
-        case 4:
+            case 3:
+                clearConsole();
+                parkingLot.searchVehicle();
+                break;
+
+            case 4:
+                clearConsole();
+                parkingLot.parkedVehicles();
+                pressEnter();
+                break;
+
+            case 5:
+                clearConsole();
+                database.printPayments();
+                pressEnter();
+                break;
+
+            case 6:
+                clearConsole();
+                database.clearPaymentsHistory();
+                pressEnter();
+                break;
+
+            default:
+                throw std::runtime_error("Invalid value.\n\n");
+            }
+        }
+
+        catch (std::exception& e) {
             clearConsole();
-            parkingLot.parkedVehicles();
-            pressEnter();
-            break;
-            
-        case 5:
-            clearConsole();
-            loop = false;
-            std::cout << "\n";
-            break;
+            std::cout << "Error: " << e.what();
         }
     }
 }

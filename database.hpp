@@ -16,6 +16,10 @@ public:
 
     void printPayments();
 
+    void clearPaymentsHistory();
+
+    bool paymentsEmpty();
+
     Database(const std::string& connectionString);
 
     std::string insertVehicleAndReturnTime(const std::string& plateNumber);
@@ -23,8 +27,6 @@ public:
     std::string eraseVehicleAndReturnTime(const std::string plateNumber, double amount);
 
     double calculateTimeDifference(const std::string plateNumber);
-
-    std::string updatePaymentsVector(const std::string plateNumber);
 
 };
 
