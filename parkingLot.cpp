@@ -42,10 +42,8 @@ bool ParkingLot::plateNumberAlreadyExists(std::string plateNumber) {
 		if (plateNumber == vehicles[i].getPlateNumber()) {
 			return true;
 		}
-		else {
-			return false;
-		}
 	}
+	return false;
 }
 
 void ParkingLot::capacityCheck() {
