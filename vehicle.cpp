@@ -1,4 +1,5 @@
 #include "vehicle.hpp"
+#include <iostream>
 
 Vehicle::Vehicle(std::string plateNumber, std::string entryTime)
 	: plateNumber(plateNumber), entryTime(entryTime) {

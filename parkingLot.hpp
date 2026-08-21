@@ -2,28 +2,28 @@
 #define PARKINGLOT_HPP
 #include "database.hpp"
 #include "vehicle.hpp"
-#include "payment.hpp"
-#include "inputValidation.hpp"
-#include <iostream>
 #include <vector>
-#include <stdexcept>
 
 class ParkingLot {
 private:
 	std::vector <Vehicle> vehicles;
 	Database& database;
 	int capacity;
+
+	std::string plateNumberValidation();
+	bool plateNumberAlreadyExists(const std::string& plateNumber);
+	void capacityCheck();
+
 public:
 	ParkingLot(Database& database);
-	void loadDatabaseData();
+
 	void enterVehicle();
-	std::string plateNumberValidation();
-	bool plateNumberAlreadyExists(std::string plateNumber);
-	void capacityCheck();
 	void removeVehicle();
+
 	void searchVehicle();
 	void parkedVehicles();
-	
+
+	void loadDatabaseData();
 };
 
 #endif 
