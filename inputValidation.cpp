@@ -1,8 +1,10 @@
 #include "inputValidation.hpp"
+#include <iostream>
 
 void clearConsole() {
 	std::cout << "\033[2J\033[H";
 }
+
 
 void pressEnter() {
 	std::cout << "\n\nPress enter to continue.";
@@ -27,6 +29,7 @@ int readInteger() {
 	return value;
 }
 
+
 std::string readString() {
 	std::string value{};
 
@@ -44,34 +47,36 @@ std::string readString() {
 	return value;
 }
 
-void validPlateFormat(std::string plate) {
-	if (plate.length() != 9) {
+
+void validPlateFormat(const std::string& plateNumber) {
+	if (plateNumber.length() != 9) {
 		throw std::runtime_error("The plate number must be 9 characters long.\n\n");
 	}
 	for (int i = 0; i < 3; ++i) {
-		if (!std::isalpha(plate[i])) {
+		if (!std::isalpha(plateNumber[i])) {
 			throw std::runtime_error("Invalid format.\n\n");
 		}
 	}
-	if (plate[3] != '-') {
+	if (plateNumber[3] != '-') {
 		throw std::runtime_error("Invalid format.\n\n");
 	}
 	for (int i = 4; i < 7; ++i) {
-		if (!std::isdigit(plate[i])) {
+		if (!std::isdigit(plateNumber[i])) {
 			throw std::runtime_error("Invalid format.\n\n");
 		}
 	}
-	if (plate[7] != '-') {
+	if (plateNumber[7] != '-') {
 		throw std::runtime_error("Invalid format.\n\n");
 	}
-	else if (!std::isalpha(plate[8])) {
+	else if (!std::isalpha(plateNumber[8])) {
 		throw std::runtime_error("Invalid format.\n\n");
 	}
 }
 
-std::string convertToUppercasePlateNumber(std::string plate) {
+
+std::string convertToUppercasePlateNumber(std::string& plateNumber) {
 	for (size_t i = 0; i < 9; ++i) {
-		plate[i] = std::toupper(plate[i]);
+		plateNumber[i] = std::toupper(plateNumber[i]);
 	}
-	return plate;
+	return plateNumber;
 }

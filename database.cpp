@@ -1,4 +1,6 @@
 #include "database.hpp"
+#include <exception>
+#include <iostream>
 
 Database::Database(const std::string& connectionString)
     : connection(connectionString) {
@@ -69,7 +71,7 @@ std::string Database::insertVehicleAndReturnTime(const std::string& plateNumber)
     return entryTime;
 }
 
-std::string Database::eraseVehicleAndReturnTime(const std::string plateNumber, double amount) {
+std::string Database::eraseVehicleAndReturnTime(const std::string& plateNumber, const double amount) {
 
     pqxx::work transaction(connection);
 
@@ -84,12 +86,13 @@ std::string Database::eraseVehicleAndReturnTime(const std::string plateNumber, d
     return exitTime;
 }
 
-double Database::calculateTimeDifference(std::string plateNumber) {
+//calculates billable hours rounding partial hours up.
+int Database::calculateTimeDifference(const std::string& plateNumber) {
     pqxx::work transaction(connection);
 
-    pqxx::result result = transaction.exec("SELECT EXTRACT(EPOCH FROM(CURRENT_TIMESTAMP - entry_time)) / 3600.0 FROM vehicles WHERE plate_number = $1", pqxx::params{ plateNumber });
+    pqxx::result result = transaction.exec("SELECT CEIL(EXTRACT(EPOCH FROM(CURRENT_TIMESTAMP - entry_time)) / 3600.0)::int FROM vehicles WHERE plate_number = $1", pqxx::params{ plateNumber });
 
-    double hours = result[0][0].as<double>();
+    int hours = result[0][0].as<int>();
 
     transaction.commit();
 

@@ -1,5 +1,6 @@
 #include "parkingLot.hpp"
 #include "database.hpp"
+#include "inputValidation.hpp"
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
@@ -8,9 +9,9 @@
 int main()
 {
     char* dbUrl = nullptr;
-    size_t length = 0;
 
-    _dupenv_s(&dbUrl, &length, "NEON_DB_URL");
+    //retrieve the database URL from the Windows environment variables.
+    _dupenv_s(&dbUrl, nullptr, "NEON_DB_URL");
 
     if (dbUrl == nullptr) {
         throw std::runtime_error("NEON_DB_URL environment variable not found.");
@@ -22,6 +23,7 @@ int main()
 
     ParkingLot parkingLot(database);
 
+    //load vehicle data from Neon into memory.
     parkingLot.loadDatabaseData();
 
     bool loop{ true };
@@ -50,7 +52,7 @@ int main()
 
             case 1:
                 clearConsole();
-                parkingLot.capacityCheck();
+                parkingLot.enterVehicle();
                 break;
 
             case 2:
