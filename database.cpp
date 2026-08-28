@@ -86,7 +86,7 @@ std::string Database::eraseVehicleAndReturnTime(const std::string& plateNumber, 
     return exitTime;
 }
 
-//calculates billable hours rounding partial hours up.
+//calculates billable hours rounding partial hours up
 int Database::calculateTimeDifference(const std::string& plateNumber) {
     pqxx::work transaction(connection);
 
