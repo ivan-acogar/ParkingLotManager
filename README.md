@@ -119,7 +119,7 @@ Restart Visual Studio after creating the variable.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ParkingLotManager.git
+https://github.com/ivan-acogar/ParkingLotManager.git
 ```
 
 2. Open `ParkingLotManager.slnx` in Visual Studio.
