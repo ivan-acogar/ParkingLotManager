@@ -1,5 +1,8 @@
 #include "inputValidation.hpp"
 #include <iostream>
+#include <cctype>
+#include <limits>
+#include <stdexcept>
 
 void clearConsole() {
 	std::cout << "\033[2J\033[H";

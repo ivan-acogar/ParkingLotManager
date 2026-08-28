@@ -125,6 +125,10 @@ void ParkingLot::removeVehicle() {
 							payment_amount = cost_per_hour;
 						}
 
+						if (payment_amount == 0) {
+							payment_amount = cost_per_hour;
+						}
+
 						std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
 
 						std::cout << "Plate Number: " << plateNumber << " || ";
