@@ -1,87 +1,105 @@
 #include "parkingLot.hpp"
 #include "database.hpp"
+#include "inputValidation.hpp"
 #include <pqxx/pqxx>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
-static void menuInputValidation(int menuOption) {
-    if (menuOption < 1 || menuOption > 5) {
-        throw std::runtime_error("Value is out of range.\n\n");
-    }
-}
-
 int main()
 {
     char* dbUrl = nullptr;
-    size_t length = 0;
 
-    _dupenv_s(&dbUrl, &length, "NEON_DB_URL");
+    try {
+        _dupenv_s(&dbUrl, nullptr, "NEON_DB_URL");
 
-    if (dbUrl == nullptr) {
-        throw std::runtime_error("NEON_DB_URL environment variable not found.");
-    }
+        if (dbUrl == nullptr) {
+            throw std::runtime_error(
+                "NEON_DB_URL environment variable not found.\n\n"
+            );
+        }
 
-    Database database(dbUrl);
+        Database database(dbUrl);
+        free(dbUrl);
+        dbUrl = nullptr;
 
-    free(dbUrl);
+        ParkingLot parkingLot(database);
+        parkingLot.loadDatabaseData();
 
-    ParkingLot parkingLot(database);
+        bool loop{ true };
+        while (loop == true) {
+            std::cout << "--- Parking Lot Menu ---\n";
+            std::cout << "0) Exit program.\n";
+            std::cout << "1) Enter vehicle.\n";
+            std::cout << "2) Exit vehicle.\n";
+            std::cout << "3) Search vehicle.\n";
+            std::cout << "4) Show Parked vehicles.\n";
+            std::cout << "5) Show Payments History.\n";
+            std::cout << "6) Clear Payments History.\n\n";
 
-    parkingLot.loadDatabaseData();
-
-
-
-    std::cout << "Current time: ";
-
-    bool loop{ true };
-    while (loop == true) {
-        std::cout << "--- Parking Lot Menu ---\n";
-        std::cout << "1) Enter vehicle.\n";
-        std::cout << "2) Exit vehicle.\n";
-        std::cout << "3) Search vehicle.\n";
-        std::cout << "4) Parked vehicles.\n";
-        std::cout << "5) Exit program.\n\n";
-
-        int menuOption{};
-           try {
+            int menuOption{};
+            try {
                 std::cout << "Enter an option: ";
                 menuOption = readInteger();
-                menuInputValidation(menuOption);
-           }
-           catch (std::exception& e) {
-               clearConsole();
-               std::cout << "Error: " << e.what();
-           }
 
-        switch (menuOption) {
-        case 1:
-            clearConsole();
-            parkingLot.capacityCheck();
-            break;
+                switch (menuOption) {
 
+                case 0:
+                    clearConsole();
+                    loop = false;
+                    std::cout << "Program terminated. \n";
+                    break;
 
-        case 2:
-            clearConsole();
-            parkingLot.removeVehicle();
-            break;
+                case 1:
+                    clearConsole();
+                    parkingLot.enterVehicle();
+                    break;
 
-        case 3:
-            clearConsole();
-            parkingLot.searchVehicle();
-            break;
+                case 2:
+                    clearConsole();
+                    parkingLot.removeVehicle();
+                    break;
 
-        case 4:
-            clearConsole();
-            parkingLot.parkedVehicles();
-            pressEnter();
-            break;
-            
-        case 5:
-            clearConsole();
-            loop = false;
-            std::cout << "\n";
-            break;
+                case 3:
+                    clearConsole();
+                    parkingLot.searchVehicle();
+                    break;
+
+                case 4:
+                    clearConsole();
+                    parkingLot.parkedVehicles();
+                    pressEnter();
+                    break;
+
+                case 5:
+                    clearConsole();
+                    database.printPayments();
+                    pressEnter();
+                    break;
+
+                case 6:
+                    clearConsole();
+                    database.clearPaymentsHistory();
+                    pressEnter();
+                    break;
+
+                default:
+                    throw std::runtime_error("Invalid value.\n\n");
+                }
+            }
+
+            catch (const std::exception& e) {
+                clearConsole();
+                std::cout << "Error: " << e.what();
+            }
         }
     }
+
+    catch (const std::exception& e) {
+        free(dbUrl); // Safe even if nullptr
+        std::cerr << "Fatal error: " << e.what();
+        return 1;
+    }
+
+    return 0;
 }
