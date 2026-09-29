@@ -2,8 +2,6 @@
 
 C++20 console app that manages parking lot entries, exits and payments with persistent PostgreSQL storage.
 
-![Parking Lot Manager demo](docs/demo.gif)
-
 ![Demo](docs/demo.gif)
 
 ## Features
