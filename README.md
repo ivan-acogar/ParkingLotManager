@@ -2,6 +2,8 @@
 
 A C++20 console application for managing parking lot operations with persistent cloud storage through PostgreSQL and Neon.
 
+![Parking Lot Manager demo](docs/demo.gif)
+
 The project demonstrates object-oriented design, database integration, SQL transactions, input validation, exception handling, and separation of responsibilities across multiple C++ classes.
 
 ## Features
