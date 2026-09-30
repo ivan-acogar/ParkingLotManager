@@ -3,258 +3,243 @@
 #include <iostream>
 #include <stdexcept>
 
-ParkingLot::ParkingLot(Database& database)
-	: database(database), capacity{10} {
-}
-
+ParkingLot::ParkingLot(Database &database) : database(database), capacity{10} {}
 
 std::string ParkingLot::plateNumberValidation() {
 
-	std::string plateNumber{};
+    std::string plateNumber{};
 
-	plateNumber = readString();
+    plateNumber = readString();
 
-	validPlateFormat(plateNumber);
+    validPlateFormat(plateNumber);
 
-	convertToUppercasePlateNumber(plateNumber);
+    convertToUppercasePlateNumber(plateNumber);
 
-	return plateNumber;
+    return plateNumber;
 }
 
-bool ParkingLot::plateNumberAlreadyExists(const std::string& plateNumber) {
-	for (size_t i = 0; i < vehicles.size(); ++i) {
-		if (plateNumber == vehicles[i].getPlateNumber()) {
-			return true;
-		}
-	}
-	return false;
+bool ParkingLot::plateNumberAlreadyExists(const std::string &plateNumber) {
+    for (size_t i = 0; i < vehicles.size(); ++i) {
+        if (plateNumber == vehicles[i].getPlateNumber()) {
+            return true;
+        }
+    }
+    return false;
 }
-
 
 void ParkingLot::capacityCheck() {
-	if (vehicles.size() >= capacity) {
-		clearConsole();
-		throw std::runtime_error("The parking Lot is full.\n\n");
-	}
+    if (vehicles.size() >= capacity) {
+        clearConsole();
+        throw std::runtime_error("The parking Lot is full.\n\n");
+    }
 }
-
 
 void ParkingLot::enterVehicle() {
 
-	capacityCheck();
+    capacityCheck();
 
-	std::cout << "Enter vehicle (Remaining capacity: " << capacity - vehicles.size() << ").\n\n";
+    std::cout << "Enter vehicle (Remaining capacity: " << capacity - vehicles.size() << ").\n\n";
 
-	std::string plateNumber{};
-	std::string entryTime{};
+    std::string plateNumber{};
+    std::string entryTime{};
 
-	try {
-		std::cout << "Enter plate number (format: ABC-123-A): ";
+    try {
+        std::cout << "Enter plate number (format: ABC-123-A): ";
 
-		plateNumber = plateNumberValidation();
+        plateNumber = plateNumberValidation();
 
-		if (plateNumberAlreadyExists(plateNumber) == true) {
+        if (plateNumberAlreadyExists(plateNumber) == true) {
 
-			throw std::runtime_error("This plate number already exists.\n\n");
-		}
+            throw std::runtime_error("This plate number already exists.\n\n");
+        }
 
-		//Insert the vehicle and retrieve its entry current time from Neon.
-		entryTime = database.insertVehicleAndReturnTime(plateNumber);
+        // Insert the vehicle and retrieve its entry current time from Neon.
+        entryTime = database.insertVehicleAndReturnTime(plateNumber);
 
-		clearConsole();
-		std::cout << "Vehicle registered:\n";
-		std::cout << "Plate Number: " << plateNumber << " || ";
-		std::cout << "Entry Time: " << entryTime << "\n";
+        clearConsole();
+        std::cout << "Vehicle registered:\n";
+        std::cout << "Plate Number: " << plateNumber << " || ";
+        std::cout << "Entry Time: " << entryTime << "\n";
 
-		vehicles.push_back(Vehicle(plateNumber, entryTime));
-		
-		pressEnter();
-	}
-		catch (std::exception& e) {
-			clearConsole();
-			std::cout << "Error: " << e.what();
-		}
+        vehicles.push_back(Vehicle(plateNumber, entryTime));
+
+        pressEnter();
+    } catch (std::exception &e) {
+        clearConsole();
+        std::cout << "Error: " << e.what();
+    }
 }
-
 
 void ParkingLot::removeVehicle() {
-	try {
+    try {
 
-		if (vehicles.size() == 0) {
-			throw std::runtime_error("The parking lot is empty.\n\n");
-		}
+        if (vehicles.size() == 0) {
+            throw std::runtime_error("The parking lot is empty.\n\n");
+        }
 
-		std::cout << "--- Remove vehicle menu ---\n";
-		std::cout << "1) Search by plate number.\n";
-		std::cout << "2) Remove by showing the existing vehicles list.\n\n";
+        std::cout << "--- Remove vehicle menu ---\n";
+        std::cout << "1) Search by plate number.\n";
+        std::cout << "2) Remove by showing the existing vehicles list.\n\n";
 
-		std::cout << "Enter option: ";
-		int menuOption = readInteger();
+        std::cout << "Enter option: ";
+        int menuOption = readInteger();
 
-		double payment_amount{};
-		int hours{};
-		double cost_per_hour{25};
+        double payment_amount{};
+        int hours{};
+        double cost_per_hour{25};
 
-		switch(menuOption){
+        switch (menuOption) {
 
-			case 1: {
-				clearConsole();
-				std::cout << "Search a vehicle.\n";
+        case 1: {
+            clearConsole();
+            std::cout << "Search a vehicle.\n";
 
-				std::cout << "Enter plate number (format: ABC-123-A): ";
+            std::cout << "Enter plate number (format: ABC-123-A): ";
 
-				std::string plateNumber = plateNumberValidation();
+            std::string plateNumber = plateNumberValidation();
 
-				if (plateNumberAlreadyExists(plateNumber) == false) {
+            if (plateNumberAlreadyExists(plateNumber) == false) {
 
-					throw std::runtime_error("This plate number does not exist.\n\n");
-				}
+                throw std::runtime_error("This plate number does not exist.\n\n");
+            }
 
-				for (size_t i = 0; i < vehicles.size(); ++i) {
-					if (plateNumber == vehicles[i].getPlateNumber()) {
+            for (size_t i = 0; i < vehicles.size(); ++i) {
+                if (plateNumber == vehicles[i].getPlateNumber()) {
 
-						clearConsole();
+                    clearConsole();
 
-						std::cout << "Vehicle found.\n";
+                    std::cout << "Vehicle found.\n";
 
-						hours = database.calculateTimeDifference(plateNumber);
+                    hours = database.calculateTimeDifference(plateNumber);
 
-						payment_amount = hours * cost_per_hour;
+                    payment_amount = hours * cost_per_hour;
 
-						if (payment_amount == 0) {
-							payment_amount = cost_per_hour;
-						}
+                    if (payment_amount == 0) {
+                        payment_amount = cost_per_hour;
+                    }
 
-						std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
+                    std::string exitTime =
+                        database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
 
-						std::cout << "Plate Number: " << plateNumber << " || ";
-						std::cout << "Exit Time: " << exitTime << "\n\n";
+                    std::cout << "Plate Number: " << plateNumber << " || ";
+                    std::cout << "Exit Time: " << exitTime << "\n\n";
 
-						std::cout << "This vehicle stayed for " << hours << " hours.\n";
-						std::cout << "Charge $" << payment_amount << ".\n\n";
+                    std::cout << "This vehicle stayed for " << hours << " hours.\n";
+                    std::cout << "Charge $" << payment_amount << ".\n\n";
 
-						vehicles.erase(vehicles.begin() + i);
+                    vehicles.erase(vehicles.begin() + i);
 
-						pressEnter();
-					}
-				}
-				
-				break;
+                    pressEnter();
+                }
+            }
 
-			}
+            break;
+        }
 
-			case 2: {
-				clearConsole();
-				parkedVehicles();
+        case 2: {
+            clearConsole();
+            parkedVehicles();
 
-				std::string plateNumber{};
+            std::string plateNumber{};
 
-				std::cout << "Enter the vehicle number to remove: ";
-				size_t menuOption = readInteger();
+            std::cout << "Enter the vehicle number to remove: ";
+            size_t menuOption = readInteger();
 
-				if (menuOption < 1 || menuOption > vehicles.size()) {
-					throw std::runtime_error("Input is out of range.\n\n");
-				}
+            if (menuOption < 1 || menuOption > vehicles.size()) {
+                throw std::runtime_error("Input is out of range.\n\n");
+            }
 
-				else {
-					clearConsole();
+            else {
+                clearConsole();
 
-					std::cout << "Vehicle found.\n\n";
+                std::cout << "Vehicle found.\n\n";
 
-					size_t index = menuOption - 1;
+                size_t index = menuOption - 1;
 
-					plateNumber = vehicles[index].getPlateNumber();
+                plateNumber = vehicles[index].getPlateNumber();
 
-					hours = database.calculateTimeDifference(plateNumber);
+                hours = database.calculateTimeDifference(plateNumber);
 
-					payment_amount = hours * cost_per_hour;
+                payment_amount = hours * cost_per_hour;
 
-					if (payment_amount == 0) {
-						payment_amount = cost_per_hour;
-					}
+                if (payment_amount == 0) {
+                    payment_amount = cost_per_hour;
+                }
 
+                std::string exitTime =
+                    database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
 
-					std::string exitTime = database.eraseVehicleAndReturnTime(plateNumber, payment_amount);
+                std::cout << "Plate Number: " << plateNumber << " || ";
+                std::cout << "Exit Time: " << exitTime << "\n\n";
 
-					std::cout << "Plate Number: " << plateNumber << " || ";
-					std::cout << "Exit Time: " << exitTime << "\n\n";
+                std::cout << "This vehicle stayed for " << hours << " hours.\n";
+                std::cout << "Charge $" << payment_amount << ".\n\n";
 
-					std::cout << "This vehicle stayed for " << hours << " hours.\n";
-					std::cout << "Charge $" << payment_amount << ".\n\n";
+                vehicles.erase(vehicles.begin() + index);
 
-					vehicles.erase(vehicles.begin() + index);
+                pressEnter();
+            }
 
-					pressEnter();
-				}
+            break;
+        }
 
-				break;
-			}
-			
-			default:
-				throw std::runtime_error("Invalid Input.\n\n");
+        default:
+            throw std::runtime_error("Invalid Input.\n\n");
+        }
 
-		}
+    }
 
-	}
-
-	catch (std::exception& e) {
-		clearConsole();
-		std::cout << "Error: " << e.what();
-	}
+    catch (std::exception &e) {
+        clearConsole();
+        std::cout << "Error: " << e.what();
+    }
 }
-
 
 void ParkingLot::searchVehicle() {
-	try {
-		if (vehicles.size() == 0) {
-			throw std::runtime_error("The parking lot is empty.\n\n");
-		}
+    try {
+        if (vehicles.size() == 0) {
+            throw std::runtime_error("The parking lot is empty.\n\n");
+        }
 
-		std::cout << "Search a vehicle.\n";
+        std::cout << "Search a vehicle.\n";
 
-		std::cout << "Enter plate number (format: ABC-123-A): ";
+        std::cout << "Enter plate number (format: ABC-123-A): ";
 
-		std::string plateNumber = plateNumberValidation();
+        std::string plateNumber = plateNumberValidation();
 
-		if (plateNumberAlreadyExists(plateNumber) == false) {
-			throw std::runtime_error("This plate number does not exist.\n\n");
-		}
+        if (plateNumberAlreadyExists(plateNumber) == false) {
+            throw std::runtime_error("This plate number does not exist.\n\n");
+        }
 
-		for (size_t i = 0; i < vehicles.size(); ++i) {
-			if (plateNumber == vehicles[i].getPlateNumber()) {
-				clearConsole();
-				std::cout << "Vehicle found.\n\n";
-				vehicles[i].printData();
-				pressEnter();
-			}
-		}
-		std::cout << "\n";
-	}
-	catch (std::exception& e) {
-		clearConsole();
-		std::cout << "Error: " << e.what();
-	}
+        for (size_t i = 0; i < vehicles.size(); ++i) {
+            if (plateNumber == vehicles[i].getPlateNumber()) {
+                clearConsole();
+                std::cout << "Vehicle found.\n\n";
+                vehicles[i].printData();
+                pressEnter();
+            }
+        }
+        std::cout << "\n";
+    } catch (std::exception &e) {
+        clearConsole();
+        std::cout << "Error: " << e.what();
+    }
 }
-
 
 void ParkingLot::parkedVehicles() {
-	std::vector<Vehicle> vehiclesFromDatabase = database.getVehicles();
+    std::vector<Vehicle> vehiclesFromDatabase = database.getVehicles();
 
-	if (vehiclesFromDatabase.size() == 0) {
-		clearConsole();
-		std::cout << "The parking lot is empty.\n\n";
-	}
-	else {
-		clearConsole();
+    if (vehiclesFromDatabase.size() == 0) {
+        clearConsole();
+        std::cout << "The parking lot is empty.\n\n";
+    } else {
+        clearConsole();
 
-		for (size_t i = 0; i < vehiclesFromDatabase.size(); ++i) {
-			std::cout << i + 1 << ") ";
-			vehiclesFromDatabase[i].printData();
-		}
-	}
+        for (size_t i = 0; i < vehiclesFromDatabase.size(); ++i) {
+            std::cout << i + 1 << ") ";
+            vehiclesFromDatabase[i].printData();
+        }
+    }
 }
 
-
-void ParkingLot::loadDatabaseData() {
-	vehicles = database.getVehicles();
-}
+void ParkingLot::loadDatabaseData() { vehicles = database.getVehicles(); }

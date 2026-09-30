@@ -1,22 +1,19 @@
-#include "parkingLot.hpp"
 #include "database.hpp"
 #include "inputValidation.hpp"
-#include <pqxx/pqxx>
+#include "parkingLot.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <pqxx/pqxx>
 #include <string>
 
-int main()
-{
-    char* dbUrl = nullptr;
+int main() {
+    char *dbUrl = nullptr;
 
     try {
         _dupenv_s(&dbUrl, nullptr, "NEON_DB_URL");
 
         if (dbUrl == nullptr) {
-            throw std::runtime_error(
-                "NEON_DB_URL environment variable not found.\n\n"
-            );
+            throw std::runtime_error("NEON_DB_URL environment variable not found.\n\n");
         }
 
         Database database(dbUrl);
@@ -26,8 +23,9 @@ int main()
         ParkingLot parkingLot(database);
         parkingLot.loadDatabaseData();
 
-        bool loop{ true };
+        bool loop{true};
         while (loop == true) {
+            clearConsole();
             std::cout << "--- Parking Lot Menu ---\n";
             std::cout << "0) Exit program.\n";
             std::cout << "1) Enter vehicle.\n";
@@ -88,14 +86,14 @@ int main()
                 }
             }
 
-            catch (const std::exception& e) {
+            catch (const std::exception &e) {
                 clearConsole();
                 std::cout << "Error: " << e.what();
             }
         }
     }
 
-    catch (const std::exception& e) {
+    catch (const std::exception &e) {
         free(dbUrl); // Safe even if nullptr
         std::cerr << "Fatal error: " << e.what();
         return 1;
