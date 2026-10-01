@@ -5,25 +5,25 @@
 #include <vector>
 
 class ParkingLot {
-private:
-	std::vector <Vehicle> vehicles;
-	Database& database;
-	int capacity;
+  private:
+    std::vector<Vehicle> vehicles;
+    Database &database;
+    size_t capacity;
 
-	std::string plateNumberValidation();
-	bool plateNumberAlreadyExists(const std::string& plateNumber);
-	void capacityCheck();
+    std::string plateNumberValidation();
+    bool plateNumberAlreadyExists(const std::string &plateNumber);
+    void capacityCheck();
 
-public:
-	ParkingLot(Database& database);
+  public:
+    ParkingLot(Database &database);
 
-	void enterVehicle();
-	void removeVehicle();
+    void enterVehicle();
+    void removeVehicle();
 
-	void searchVehicle();
-	void parkedVehicles();
+    void searchVehicle();
+    void parkedVehicles();
 
-	void loadDatabaseData();
+    void loadDatabaseData();
 };
 
-#endif 
+#endif

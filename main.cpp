@@ -23,10 +23,11 @@ int main() {
         ParkingLot parkingLot(database);
         parkingLot.loadDatabaseData();
 
+        clearConsole();
+
         bool loop{true};
         while (loop == true) {
-            clearConsole();
-            std::cout << "--- Parking Lot Menu ---\n";
+            std::cout << "===== Parking Lot Menu =====\n\n";
             std::cout << "0) Exit program.\n";
             std::cout << "1) Enter vehicle.\n";
             std::cout << "2) Exit vehicle.\n";

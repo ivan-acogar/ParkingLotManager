@@ -38,6 +38,7 @@ void ParkingLot::enterVehicle() {
 
     capacityCheck();
 
+    std::cout << "===== Enter vehicle menu =====\n\n";
     std::cout << "Enter vehicle (Remaining capacity: " << capacity - vehicles.size() << ").\n\n";
 
     std::string plateNumber{};
@@ -77,7 +78,7 @@ void ParkingLot::removeVehicle() {
             throw std::runtime_error("The parking lot is empty.\n\n");
         }
 
-        std::cout << "--- Remove vehicle menu ---\n";
+        std::cout << "===== Remove vehicle menu =====\n\n";
         std::cout << "1) Search by plate number.\n";
         std::cout << "2) Remove by showing the existing vehicles list.\n\n";
 
@@ -92,7 +93,8 @@ void ParkingLot::removeVehicle() {
 
         case 1: {
             clearConsole();
-            std::cout << "Search a vehicle.\n";
+
+            std::cout << "===== Search and remove vehicle =====\n\n";
 
             std::cout << "Enter plate number (format: ABC-123-A): ";
 
@@ -138,6 +140,9 @@ void ParkingLot::removeVehicle() {
 
         case 2: {
             clearConsole();
+
+            std::cout << "===== Search and remove vehicle =====\n\n";
+
             parkedVehicles();
 
             std::string plateNumber{};
@@ -201,7 +206,7 @@ void ParkingLot::searchVehicle() {
             throw std::runtime_error("The parking lot is empty.\n\n");
         }
 
-        std::cout << "Search a vehicle.\n";
+        std::cout << "===== Search a vehicle =====\n\n";
 
         std::cout << "Enter plate number (format: ABC-123-A): ";
 
@@ -227,6 +232,7 @@ void ParkingLot::searchVehicle() {
 }
 
 void ParkingLot::parkedVehicles() {
+
     std::vector<Vehicle> vehiclesFromDatabase = database.getVehicles();
 
     if (vehiclesFromDatabase.size() == 0) {
@@ -234,6 +240,8 @@ void ParkingLot::parkedVehicles() {
         std::cout << "The parking lot is empty.\n\n";
     } else {
         clearConsole();
+
+        std::cout << "===== Parked vehicles =====\n\n";
 
         for (size_t i = 0; i < vehiclesFromDatabase.size(); ++i) {
             std::cout << i + 1 << ") ";
